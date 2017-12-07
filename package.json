@@ -1,0 +1,23 @@
+{
+  "name": "koa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sun1ive/koa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sun1ive/koa/issues"
+  },
+  "homepage": "https://github.com/Sun1ive/koa#readme",
+  "dependencies": {
+    "koa": "^2.4.1"
+  }
+}
