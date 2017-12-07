@@ -1,6 +1,35 @@
 const koa = require('koa');
-const koaBody = require('koa-body');
+const koaAuth = require('koa-basic-auth');
+// const koaBody = require('koa-body');
+
 const app = new koa();
+
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (error) {
+    if (error.status === 401) {
+      ctx.status = 401;
+      ctx.set('WWW-Authentificate', 'Basic');
+      ctx.body = 'IDK what is going on';
+    } else {
+      throw error;
+    }
+  }
+});
+
+app.use(
+  koaAuth({
+    name: 'test',
+    pass: 'test',
+  }),
+);
+
+app.use(async ctx => {
+  ctx.body = 'Secret';
+});
+
+if (!module.parent) app.listen(8080);
 
 // app.use(koaBody());
 
@@ -31,23 +60,21 @@ const app = new koa();
 //   }
 // });
 
-app.use(async (ctx, next) => {
-  try {
-    await next();
-  } catch (err) {
-    ctx.status = err.status || 500;
-    ctx.type = 'html';
-    ctx.body = `<h1>Error: ${ctx.status}</h1>`;
-    ctx.app.emit('error', err, ctx);
-  }
-});
+// app.use(async (ctx, next) => {
+//   try {
+//     await next();
+//   } catch (err) {
+//     ctx.status = err.status || 500;
+//     ctx.type = 'html';
+//     ctx.body = `<h1>Error: ${ctx.status}</h1>`;
+//     ctx.app.emit('error', err, ctx);
+//   }
+// });
 
-app.use(async () => {
-  throw new Error('Something bad happened');
-});
+// app.use(async () => {
+//   throw new Error('Something bad happened');
+// });
 
-app.on('error', err => {
-  console.log(err.message);
-});
-
-if (!module.parent) app.listen(8080);
+// app.on('error', err => {
+//   console.log(err.message);
+// });
