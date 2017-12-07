@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Sun1ive/koa#readme",
   "dependencies": {
-    "koa": "^2.4.1"
+    "koa": "^2.4.1",
+    "koa-body": "^2.5.0"
   }
 }
