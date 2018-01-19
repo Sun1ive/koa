@@ -74,10 +74,11 @@ export const createProduct = async ctx => {
       price: body.price,
       color: body.color,
     });
-    ctx.body = await product
-      .save()
-      .then(result => result)
-      .catch(ctx.throw(400));
+    const res = await product.save();
+    if (!res) {
+      ctx.throw(403);
+    }
+    ctx.body = res;
   } catch (error) {
     ctx.throw(400, 'Validation failed');
   }
@@ -100,30 +101,33 @@ export const editProduct = async ctx => {
       itemLength: body.length,
     };
 
-    ctx.body = await Product.findByIdAndUpdate(productId, updatedItem)
-      .exec()
-      .then(() => ({
-        message: 'Product updated!',
-        request: { type: 'GET', url: `http://localhost:8081/products/${productId}` },
-      }));
+    const resp = await Product.findByIdAndUpdate(productId, updatedItem);
+    if (!resp) {
+      ctx.throw(402);
+    }
+
+    ctx.body = {
+      message: 'Product updated!',
+      request: { type: 'GET', url: `http://localhost:8081/products/${productId}` },
+    };
   } catch (error) {
-    ctx.throw(500, error);
+    ctx.body = error;
   }
 };
 
 export const deleteProduct = async ctx => {
   try {
     const { productId } = ctx.request.params;
-    ctx.body = await Product.remove({ _id: productId })
-      .exec()
-      .then(() => ({
-        message: 'Product deleted',
-        request: {
-          type: 'POST',
-          url: `http://localhost:8081/products/create`,
-        },
-      }));
+    const resp = await Product.remove({ _id: productId });
+    if (!resp) {
+      ctx.throw(500);
+    }
+    ctx.body = {
+      response: resp,
+      message: 'Product deleted',
+      request: { type: 'POST', url: `http://localhost:8081/products/create` },
+    };
   } catch (error) {
-    ctx.throw(500, error);
+    ctx.body = error;
   }
 };
