@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const postLink = async ctx => {
+export const postLink = ctx => {
   const mailBody = {
     from: '"Sunlive test 👻" <dev@indresser.com>',
     to: 'sunliveua@gmail.com',
@@ -28,7 +28,7 @@ export const postLink = async ctx => {
   ctx.body = 'Mail Sent';
 };
 
-export const postUser = async ctx => {
+export const postUser = ctx => {
   let obj = {};
   if (ctx.request.body.phone) {
     obj = { type: 'Телефон', data: ctx.request.body.phone };
@@ -46,7 +46,7 @@ export const postUser = async ctx => {
     <p>${ctx.request.body.name}</p>
     <p>${obj.data}</p>`,
   };
-  transporter.sendMail(mailBody, (err, info) => {
+  transporter.sendMail(mailBody, err => {
     if (err) {
       ctx.throw(403);
     }

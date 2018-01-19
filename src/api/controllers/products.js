@@ -14,31 +14,25 @@ export const getAllItems = async ctx => {
 
 export const getItemsByChunks = async ctx => {
   try {
-    const { page, type, params } = ctx.request.body;
+    const { page, type } = ctx.request.body;
+    const p = ctx.request.body.params;
     const perPage = 4;
-    ctx.body = await Product.find()
-      .select(itemParams)
-      .exec()
-      .then(docs => docs.filter(item => item.type === type))
-      .then(arr => {
-        const p = params;
-        let result;
-        if (type === 'Плечевые') {
-          result = compareTop(arr, p.shoulders, p.breast, p.waist, p.hips, p.height);
-        } else {
-          result = compareBottom(arr, p.waist, p.hips, p.height);
-        }
-        return result;
-      })
-      .then(result => result.splice(page * perPage - perPage, perPage))
-      .then(final => {
-        if (final.length > 0) {
-          return final;
-        }
-        return ctx.throw(404);
-      });
+    const products = await Product.find().select(itemParams);
+    const arr = products.filter(item => item.type === type);
+    let result;
+    if (type === 'Плечевые') {
+      result = compareTop(arr, p.shoulders, p.breast, p.waist, p.hips, p.height);
+    } else {
+      result = compareBottom(arr, p.waist, p.hips, p.height);
+    }
+    const final = result.splice(page * perPage - perPage, page * perPage);
+    if (final.length > 0) {
+      ctx.body = final;
+    } else {
+      ctx.throw(404);
+    }
   } catch (error) {
-    ctx.throw(404, 'Not found');
+    ctx.body = error;
   }
 };
 
@@ -80,16 +74,18 @@ export const findOneAndCompare = async ctx => {
 
 export const createProduct = async ctx => {
   try {
+    const { body } = ctx.request;
+
     const product = new Product({
-      type: ctx.request.body.type,
-      title: ctx.request.body.title,
-      link: ctx.request.body.link,
-      src: ctx.request.body.src,
-      sizes: ctx.request.body.sizes,
-      brand: ctx.request.body.brand,
-      itemLength: ctx.request.body.length,
-      price: ctx.request.body.price,
-      color: ctx.request.body.color,
+      type: body.type,
+      title: body.title,
+      link: body.link,
+      src: body.src,
+      sizes: body.sizes,
+      brand: body.brand,
+      itemLength: body.length,
+      price: body.price,
+      color: body.color,
     });
     ctx.body = await product
       .save()
@@ -103,18 +99,18 @@ export const createProduct = async ctx => {
 export const editProduct = async ctx => {
   try {
     const { productId } = ctx.request.params;
-    const req = ctx.request.body;
+    const { body } = ctx.request;
 
     const updatedItem = {
-      type: req.type,
-      title: req.title,
-      price: req.price,
-      link: req.link,
-      src: req.src,
-      brand: req.brand,
-      color: req.color,
-      sizes: req.sizes,
-      itemLength: req.length,
+      type: body.type,
+      title: body.title,
+      price: body.price,
+      link: body.link,
+      src: body.src,
+      brand: body.brand,
+      color: body.color,
+      sizes: body.sizes,
+      itemLength: body.length,
     };
 
     ctx.body = await Product.findByIdAndUpdate(productId, updatedItem)
