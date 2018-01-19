@@ -38,37 +38,24 @@ export const getItemsByChunks = async ctx => {
 
 export const findOneAndCompare = async ctx => {
   try {
-    const { params, link } = ctx.request.body;
-    ctx.body = await Product.find()
-      .select(itemParams)
-      .exec()
-      .then(doc => {
-        const resp = doc.filter(item => item.link === link);
-        if (resp.length < 1) {
-          ctx.throw(404);
-        }
-        return resp;
-      })
-      .then(item => {
-        let result;
-        item.forEach(x => {
-          if (x.type === 'Плечевые') {
-            result = compareTop(
-              item,
-              params.shoulders,
-              params.breast,
-              params.waist,
-              params.hips,
-              params.height,
-            );
-          } else {
-            result = compareBottom(item, params.waist, params.hips);
-          }
-          return result;
-        });
-      });
+    const p = ctx.request.body.params;
+    const { link } = ctx.request.body;
+    const prod = await Product.find().select(itemParams);
+    const resp = prod.filter(item => item.link === link);
+    if (resp.length < 1) {
+      ctx.throw(404, 'Not found');
+    }
+    let result;
+    resp.forEach(x => {
+      if (x.type === 'Плечевые') {
+        result = compareTop(resp, p.shoulders, p.breast, p.waist, p.hips, p.height);
+      } else {
+        result = compareBottom(resp, p.waist, p.hips);
+      }
+    });
+    ctx.body = result;
   } catch (error) {
-    ctx.throw(404, 'Not found');
+    ctx.body = error;
   }
 };
 
