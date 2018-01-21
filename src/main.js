@@ -2,7 +2,7 @@ import Koa from 'koa';
 import koaBody from 'koa-body';
 import KoaRouter from 'koa-router';
 import koaMorgan from 'koa-morgan';
-import koaResponseTime from 'koa-response-time';
+import koaCors from '@koa/cors';
 import mongoose from 'mongoose';
 
 import wooRoutes from './api/routes/woocommerce';
@@ -20,9 +20,9 @@ mongoose.connect(
 );
 mongoose.Promise = global.Promise;
 
-app.use(koaResponseTime());
 app.use(koaBody());
 app.use(koaMorgan('combined'));
+app.use(koaCors());
 app.use(router.allowedMethods());
 app.use(wooRoutes.routes());
 app.use(mailRoutes.routes());

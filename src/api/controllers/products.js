@@ -5,10 +5,9 @@ const itemParams = '_id type title link src sizes brand price color itemLength';
 
 export const getAllItems = async ctx => {
   try {
-    const items = await Product.find().select(itemParams);
-    ctx.body = items;
+    ctx.body =  await Product.find().select(itemParams);
   } catch (error) {
-    ctx.throw(500);
+    throw error
   }
 };
 
@@ -17,7 +16,9 @@ export const getItemsByChunks = async ctx => {
     const { page, type } = ctx.request.body;
     const p = ctx.request.body.params;
     const perPage = 4;
+
     const products = await Product.find().select(itemParams);
+
     const arr = products.filter(item => item.type === type);
     let result;
     if (type === 'Плечевые') {
@@ -25,7 +26,7 @@ export const getItemsByChunks = async ctx => {
     } else {
       result = compareBottom(arr, p.waist, p.hips, p.height);
     }
-    const final = result.splice(page * perPage - perPage, page * perPage);
+    const final = result.splice(page * perPage - perPage, perPage);
     if (final.length > 0) {
       ctx.body = final;
     } else {
@@ -41,6 +42,7 @@ export const findOneAndCompare = async ctx => {
     const p = ctx.request.body.params;
     const { link } = ctx.request.body;
     const prod = await Product.find().select(itemParams);
+
     const resp = prod.filter(item => item.link === link);
     if (resp.length < 1) {
       ctx.throw(404, 'Not found');
@@ -74,19 +76,20 @@ export const createProduct = async ctx => {
       price: body.price,
       color: body.color,
     });
-    const res = await product.save();
-    if (!res) {
-      ctx.throw(403);
-    }
-    ctx.body = res;
+    await product.save();
+
+    ctx.body = {
+      message: 'Product created!!',
+      request: { type: 'GET', url: `http://localhost:8081/products/` },
+    };
   } catch (error) {
-    ctx.throw(400, 'Validation failed');
+    throw error;
   }
 };
 
 export const editProduct = async ctx => {
   try {
-    const { productId } = ctx.request.params;
+    const { productId } = ctx.params;
     const { body } = ctx.request;
 
     const updatedItem = {
@@ -101,33 +104,29 @@ export const editProduct = async ctx => {
       itemLength: body.length,
     };
 
-    const resp = await Product.findByIdAndUpdate(productId, updatedItem);
-    if (!resp) {
-      ctx.throw(402);
-    }
+    await Product.findByIdAndUpdate(productId, updatedItem);
 
     ctx.body = {
       message: 'Product updated!',
       request: { type: 'GET', url: `http://localhost:8081/products/${productId}` },
     };
   } catch (error) {
-    ctx.body = error;
+    throw error;
   }
 };
 
 export const deleteProduct = async ctx => {
   try {
-    const { productId } = ctx.request.params;
-    const resp = await Product.remove({ _id: productId });
-    if (!resp) {
-      ctx.throw(500);
-    }
+    const { productId } = ctx.params;
+
+    await Product.remove({ _id: productId });
+
+
     ctx.body = {
-      response: resp,
       message: 'Product deleted',
       request: { type: 'POST', url: `http://localhost:8081/products/create` },
     };
   } catch (error) {
-    ctx.body = error;
+    throw error;
   }
 };

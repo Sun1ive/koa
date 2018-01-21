@@ -4,10 +4,10 @@ const JWT_KEY = 'Secret';
 
 export default async (ctx, next) => {
   try {
-    const token = ctx.header.authorization.split(' ')[1];
-    ctx.state.user = await jwt.verify(token, JWT_KEY)
-    next();
+    const token = await ctx.header.authorization.split(' ')[1];
+    await jwt.verify(token, JWT_KEY);
+    await next();
   } catch (error) {
-    ctx.throw(403);
+    ctx.throw(403, error)
   }
 };

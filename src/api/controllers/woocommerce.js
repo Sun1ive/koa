@@ -26,10 +26,10 @@ export default async ctx => {
         });
       });
       ctx.status = 200;
-      return arr;
+      ctx.body = arr;
     } catch (error) {
-      return ctx.throw(403);
+      ctx.throw(403, error);
     }
   }
-  ctx.body = await getProducts();
+  await getProducts();
 };

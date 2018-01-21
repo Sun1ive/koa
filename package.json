@@ -13,6 +13,7 @@
   "author": "Sunlive",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "2",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
@@ -21,6 +22,7 @@
     "jsonwebtoken": "^8.1.0",
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
+    "koa-cors": "^0.0.16",
     "koa-morgan": "^1.0.1",
     "koa-response-time": "^2.0.0",
     "koa-router": "^7.3.0",
