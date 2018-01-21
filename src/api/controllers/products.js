@@ -1,3 +1,5 @@
+// @ts-check
+
 import Product from '../models/product';
 import { compareTop, compareBottom } from '../../utils/compare';
 
@@ -5,9 +7,9 @@ const itemParams = '_id type title link src sizes brand price color itemLength';
 
 export const getAllItems = async ctx => {
   try {
-    ctx.body =  await Product.find().select(itemParams);
+    ctx.body = await Product.find().select(itemParams);
   } catch (error) {
-    throw error
+    throw error;
   }
 };
 
@@ -120,7 +122,6 @@ export const deleteProduct = async ctx => {
     const { productId } = ctx.params;
 
     await Product.remove({ _id: productId });
-
 
     ctx.body = {
       message: 'Product deleted',

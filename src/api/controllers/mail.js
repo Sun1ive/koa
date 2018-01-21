@@ -1,3 +1,4 @@
+// @ts-check
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
@@ -23,9 +24,9 @@ export const postLink = ctx => {
     if (err) {
       ctx.throw(403);
     }
+    ctx.status = 200;
+    ctx.body = { message: 'Mail Sent', info };
   });
-  ctx.status = 200;
-  ctx.body = 'Mail Sent';
 };
 
 export const postUser = ctx => {
@@ -46,13 +47,11 @@ export const postUser = ctx => {
     <p>${ctx.request.body.name}</p>
     <p>${obj.data}</p>`,
   };
-  transporter.sendMail(mailBody, err => {
+  transporter.sendMail(mailBody, (err, info) => {
     if (err) {
       ctx.throw(403);
     }
+    ctx.status = 200;
+    ctx.body = { message: 'Mail sent', info };
   });
-  ctx.status = 200;
-  ctx.body = {
-    message: 'Mail sent',
-  };
 };
