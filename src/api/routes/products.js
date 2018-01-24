@@ -7,11 +7,11 @@ const router = new Router();
 // fetch all products with types
 router.get('/products', ProductControllers.getAllItems);
 // fetch products by types and by 4 per request
-router.post('/products/items', ProductControllers.getItemsByChunks);
+router.post('/products/items', ProductControllers.getCompareAndFilterItems);
 // fetch 1 product by link
 router.post('/products/item', ProductControllers.findOneAndCompare);
 // create product
-router.post('/products/create',  ProductControllers.createProduct);
+router.post('/products/create', ProductControllers.createProduct);
 // edit product
 router.patch('/products/:productId', auth, ProductControllers.editProduct);
 // delete product

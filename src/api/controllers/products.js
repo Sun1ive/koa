@@ -14,14 +14,17 @@ export const getAllItems = async ctx => {
   }
 };
 
-export const getItemsByChunks = async ctx => {
+export const getCompareAndFilterItems = async ctx => {
   try {
     const { type, color } = ctx.request.body;
     const p = ctx.request.body.params;
 
+    console.log(type);
     const products = await Product.find().select(itemParams);
 
-    const colors = _.uniq(products.map(item => item.color));
+    const filteredByType = products.filter(item => item.type === type);
+
+    const colors = _.uniq(filteredByType.map(item => item.color));
     const brands = _.uniq(products.map(item => item.brand));
     const types = _.uniq(products.map(item => item.type));
 
