@@ -33,12 +33,12 @@ export const getItemsByChunks = async ctx => {
     } else {
       result = compareBottom(arr, p.waist, p.hips, p.height);
     }
+    console.log(color);
     if (color) {
-      const b = await result.filter(item => item.color === color);
+      const b = await result.filter(item => item.color === color).splice(page * perPage - perPage, perPage);
+      console.log(b.length);
       if (b.length < 1) {
         ctx.throw(404);
-      } else if (b.length > 4) {
-        ctx.body = b.splice(page * perPage - perPage, perPage);
       } else {
         ctx.body = { items: b };
       }

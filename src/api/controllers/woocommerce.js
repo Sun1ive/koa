@@ -9,7 +9,7 @@ const WooCommerce = new WooCommerceAPI({
 });
 
 export default async ctx => {
-  const page = ctx.search.slice(1);
+  const page = Object.keys(ctx.query).toString();
 
   async function getProducts() {
     try {

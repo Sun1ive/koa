@@ -11,7 +11,7 @@ router.post('/products/items', ProductControllers.getItemsByChunks);
 // fetch 1 product by link
 router.post('/products/item', ProductControllers.findOneAndCompare);
 // create product
-router.post('/products/create', auth, ProductControllers.createProduct);
+router.post('/products/create',  ProductControllers.createProduct);
 // edit product
 router.patch('/products/:productId', auth, ProductControllers.editProduct);
 // delete product
