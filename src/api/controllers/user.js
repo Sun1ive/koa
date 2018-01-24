@@ -33,7 +33,7 @@ export const login = async ctx => {
     if (user.length < 1) {
       return ctx.throw(401, 'Auth Failed');
     }
-    const response = await bcrypt.compare(ctx.request.body.password, user[0].password)
+    const response = await bcrypt.compare(ctx.request.body.password, user[0].password);
     if (response) {
       const token = jwt.sign(
         {

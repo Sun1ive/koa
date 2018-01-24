@@ -3,6 +3,8 @@ import koaBody from 'koa-body';
 import KoaRouter from 'koa-router';
 import koaMorgan from 'koa-morgan';
 import koaCors from '@koa/cors';
+import koaViews from 'koa-views';
+import path from 'path';
 import mongoose from 'mongoose';
 
 import wooRoutes from './api/routes/woocommerce';
@@ -23,6 +25,9 @@ mongoose.Promise = global.Promise;
 app.use(koaBody());
 app.use(koaMorgan('combined'));
 app.use(koaCors());
+
+app.use(koaViews(path.join(__dirname, '/views'), { extension: 'pug' }));
+
 app.use(router.allowedMethods());
 app.use(wooRoutes.routes());
 app.use(mailRoutes.routes());

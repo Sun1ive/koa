@@ -1,0 +1,26 @@
+//- main.pug
+extends layout.pug
+
+block content
+  .columns
+    div(class="column is-three-fifths is-offset-one-fifth")
+      .field
+        p(class="control has-icons-left has-icons.right")
+          input(class="input", id="email", type="email", placeholder="Email")
+          span(class="icon is-small is-left")
+            i(class="fas fa-envelope")
+          span(class="icon is-small is-right")
+            i(class="fas fa-check")
+      .field
+        p(class="control has-icons-left")
+          input(class="input", id="pw", type="password", placeholder="Password")
+          span(class="icon is-small is-left")
+            i(class="fas fa-envelope")
+          span(class="icon is-small is-right")
+            i(class="fas fa-check")
+      div(class="field")
+        p(class="control")
+          button(class="button is-success", onclick="foo()").
+            Login
+  script
+    include script.js

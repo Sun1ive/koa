@@ -8,7 +8,7 @@ const WooCommerce = new WooCommerceAPI({
   version: 'wc/v2',
 });
 
-export default async ctx => {
+export const fetchItems = async ctx => {
   const page = Object.keys(ctx.query).toString();
 
   async function getProducts() {
@@ -32,4 +32,8 @@ export default async ctx => {
     }
   }
   await getProducts();
+};
+
+export const test = async ctx => {
+  await ctx.render('main');
 };
