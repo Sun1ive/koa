@@ -32,11 +32,20 @@ export const postLink = ctx => {
 export const postUser = ctx => {
   let obj = {};
   if (ctx.request.body.phone) {
-    obj = { type: 'Телефон', data: ctx.request.body.phone };
+    obj = {
+      type: 'Телефон',
+      data: ctx.request.body.phone,
+    };
   } else if (ctx.request.body.email) {
-    obj = { type: 'email', data: ctx.request.body.email };
+    obj = {
+      type: 'email',
+      data: ctx.request.body.email,
+    };
   } else {
-    obj = { type: 'Messenger', data: ctx.request.body.messenger };
+    obj = {
+      type: 'Messenger',
+      data: ctx.request.body.messenger,
+    };
   }
   const mailBody = {
     from: '"Sunlive test 👻" <dev@indresser.com>',

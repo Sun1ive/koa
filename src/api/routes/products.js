@@ -9,7 +9,7 @@ router.get('/products', ProductControllers.getAllItems);
 // fetch products by types and by 4 per request
 router.post('/products/items', ProductControllers.getItemsByChunks);
 // fetch 1 product by link
-router.post('/products/single', ProductControllers.findOneAndCompare);
+router.post('/products/item', ProductControllers.findOneAndCompare);
 // create product
 router.post('/products/create', auth, ProductControllers.createProduct);
 // edit product

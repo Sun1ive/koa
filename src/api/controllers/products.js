@@ -1,4 +1,5 @@
 // @ts-check
+import _ from 'lodash';
 
 import Product from '../models/product';
 import { compareTop, compareBottom } from '../../utils/compare';
@@ -8,18 +9,22 @@ const itemParams = '_id type title link src sizes brand price color itemLength';
 export const getAllItems = async ctx => {
   try {
     ctx.body = await Product.find().select(itemParams);
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
 export const getItemsByChunks = async ctx => {
   try {
-    const { page, type } = ctx.request.body;
+    const { page, type, color } = ctx.request.body;
     const p = ctx.request.body.params;
     const perPage = 4;
 
     const products = await Product.find().select(itemParams);
+
+    const colors = _.uniq(products.map(item => item.color));
+    const brands = _.uniq(products.map(item => item.brand));
+    const types = _.uniq(products.map(item => item.type));
 
     const arr = products.filter(item => item.type === type);
     let result;
@@ -28,14 +33,26 @@ export const getItemsByChunks = async ctx => {
     } else {
       result = compareBottom(arr, p.waist, p.hips, p.height);
     }
-    const final = result.splice(page * perPage - perPage, perPage);
-    if (final.length > 0) {
-      ctx.body = final;
+    if (color) {
+      const b = await result.filter(item => item.color === color);
+      if (b.length < 1) {
+        ctx.throw(404);
+      } else if (b.length > 4) {
+        ctx.body = b.splice(page * perPage - perPage, perPage);
+      } else {
+        ctx.body = { items: b };
+      }
     } else {
-      ctx.throw(404);
+      const items = result.splice(page * perPage - perPage, perPage);
+      if (items.length > 0) {
+        ctx.body = { items, colors, brands, types };
+      } else {
+        ctx.status = 404;
+        ctx.body = { message: 'No items left' };
+      }
     }
-  } catch (error) {
-    ctx.body = error;
+  } catch (err) {
+    throw err;
   }
 };
 
@@ -58,11 +75,12 @@ export const findOneAndCompare = async ctx => {
       }
     });
     ctx.body = result;
-  } catch (error) {
-    ctx.body = error;
+  } catch (err) {
+    ctx.body = err;
   }
 };
 
+// create edit delete
 export const createProduct = async ctx => {
   try {
     const { body } = ctx.request;
@@ -84,8 +102,8 @@ export const createProduct = async ctx => {
       message: 'Product created!!',
       request: { type: 'GET', url: `http://localhost:8081/products/` },
     };
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
@@ -112,8 +130,8 @@ export const editProduct = async ctx => {
       message: 'Product updated!',
       request: { type: 'GET', url: `http://localhost:8081/products/${productId}` },
     };
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
 
@@ -127,7 +145,7 @@ export const deleteProduct = async ctx => {
       message: 'Product deleted',
       request: { type: 'POST', url: `http://localhost:8081/products/create` },
     };
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    throw err;
   }
 };
