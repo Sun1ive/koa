@@ -16,9 +16,8 @@ export const getAllItems = async ctx => {
 
 export const getItemsByChunks = async ctx => {
   try {
-    const { page, type, color } = ctx.request.body;
+    const { type, color } = ctx.request.body;
     const p = ctx.request.body.params;
-    const perPage = 4;
 
     const products = await Product.find().select(itemParams);
 
@@ -35,7 +34,7 @@ export const getItemsByChunks = async ctx => {
     }
     console.log(color);
     if (color) {
-      const b = await result.filter(item => item.color === color).splice(page * perPage - perPage, perPage);
+      const b = await result.filter(item => item.color === color);
       console.log(b.length);
       if (b.length < 1) {
         ctx.throw(404);
@@ -43,7 +42,7 @@ export const getItemsByChunks = async ctx => {
         ctx.body = { items: b };
       }
     } else {
-      const items = result.splice(page * perPage - perPage, perPage);
+      const items = result;
       if (items.length > 0) {
         ctx.body = { items, colors, brands, types };
       } else {
