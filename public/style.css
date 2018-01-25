@@ -1,0 +1,16 @@
+h1 {
+  color: red;
+}
+.container {
+  display: grid;
+  /* grid-template-columns: 33.3% 33.3% 33.3%; */
+  /* grid-template-columns: 50% 30% 20%; */
+  grid-template-columns: 1fr 2fr 1fr;
+}
+.container div:nth-child(even) {
+  background-color: #777;
+}
+.container div {
+  background-color: #3bbced;
+  height: 100px;
+}

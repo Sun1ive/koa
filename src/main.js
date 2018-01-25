@@ -4,6 +4,7 @@ import KoaRouter from 'koa-router';
 import koaMorgan from 'koa-morgan';
 import koaCors from '@koa/cors';
 import koaViews from 'koa-views';
+import koaStatic from 'koa-static';
 import path from 'path';
 import mongoose from 'mongoose';
 
@@ -25,8 +26,10 @@ mongoose.Promise = global.Promise;
 app.use(koaBody());
 app.use(koaMorgan('combined'));
 app.use(koaCors());
+app.use(koaStatic('public'));
 
-app.use(koaViews(path.join(__dirname, '/views'), { extension: 'pug' }));
+// app.use(koaViews(path.join(__dirname, '/views'), { extension: 'pug' }));
+app.use(koaViews(path.join(__dirname, 'views')));
 
 app.use(router.allowedMethods());
 app.use(wooRoutes.routes());
