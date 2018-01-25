@@ -16,33 +16,47 @@ export const getAllItems = async ctx => {
 
 export const getCompareAndFilterItems = async ctx => {
   try {
-    const { type, color } = ctx.request.body;
+    const { type, color, brand } = ctx.request.body;
     const p = ctx.request.body.params;
 
     console.log(type);
+    console.log(brand);
     const products = await Product.find().select(itemParams);
 
     const filteredByType = products.filter(item => item.type === type);
 
     const colors = _.uniq(filteredByType.map(item => item.color));
-    const brands = _.uniq(products.map(item => item.brand));
+    // const brands = _.uniq(products.map(item => item.brand));
+    let brands;
     const types = _.uniq(products.map(item => item.type));
 
     const arr = products.filter(item => item.type === type);
     let result;
     if (type === 'Плечевые') {
       result = compareTop(arr, p.shoulders, p.breast, p.waist, p.hips, p.height);
+      brands = _.uniq(result.map(item => item.brand));
     } else {
       result = compareBottom(arr, p.waist, p.hips, p.height);
+      brands = _.uniq(result.map(item => item.brand));
     }
     console.log(color);
     if (color) {
-      const b = await result.filter(item => item.color === color);
-      console.log(b.length);
-      if (b.length < 1) {
+      const items = await result.filter(item => item.color === color);
+      if (items.length < 1) {
         ctx.throw(404);
       } else {
-        ctx.body = { items: b };
+        ctx.body = { items };
+      }
+    } else if (brand) {
+      const items = await result.filter(item => item.brand === brand);
+      const colors = _.uniq(items.map(item => item.color));
+      if (items.length < 1) {
+        ctx.throw(404);
+      } else {
+        ctx.body = {
+          items,
+          colors,
+        };
       }
     } else {
       const items = result;
