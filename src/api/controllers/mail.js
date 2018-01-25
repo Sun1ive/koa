@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const postLink = ctx => {
+export const postLink = async ctx => {
   const mailBody = {
     from: '"Sunlive test 👻" <dev@indresser.com>',
     to: 'sunliveua@gmail.com',
@@ -20,47 +20,34 @@ export const postLink = ctx => {
     <p>you have got missed link</p>
     <p>${ctx.request.body.link}</p>`,
   };
-  transporter.sendMail(mailBody, (err, info) => {
-    if (err) {
-      ctx.throw(403);
-    }
-    ctx.status = 200;
-    ctx.body = { message: 'Mail Sent', info };
-  });
+  await transporter
+    .sendMail(mailBody)
+    .then(() => {
+      ctx.status = 200;
+      ctx.body = { message: 'Mail has been sent' };
+    })
+    .catch(e => {
+      ctx.throw(403, e);
+    });
 };
 
-export const postUser = ctx => {
-  let obj = {};
-  if (ctx.request.body.phone) {
-    obj = {
-      type: 'Телефон',
-      data: ctx.request.body.phone,
-    };
-  } else if (ctx.request.body.email) {
-    obj = {
-      type: 'email',
-      data: ctx.request.body.email,
-    };
-  } else {
-    obj = {
-      type: 'Messenger',
-      data: ctx.request.body.messenger,
-    };
-  }
+export const postUser = async ctx => {
   const mailBody = {
     from: '"Sunlive test 👻" <dev@indresser.com>',
     to: 'sunliveua@gmail.com',
     subject: 'Hello ✔',
     html: `<h1>Hello</h1>
-    <p>Свяжитесь со мной с помощью ${obj.type}</p>
-    <p>${ctx.request.body.name}</p>
-    <p>${obj.data}</p>`,
+    <p>Пользователь ${ctx.request.body.name} оставил запрос.</p>
+    <p>Свяжитесь со мной с помощью ${ctx.request.body.type}</p>
+    <p>Контакт: ${ctx.request.body.source}</p>`,
   };
-  transporter.sendMail(mailBody, (err, info) => {
-    if (err) {
-      ctx.throw(403);
-    }
-    ctx.status = 200;
-    ctx.body = { message: 'Mail sent', info };
-  });
+  await transporter
+    .sendMail(mailBody)
+    .then(() => {
+      ctx.status = 200;
+      ctx.body = { message: 'Mail has been sent' };
+    })
+    .catch(e => {
+      ctx.throw(403, e);
+    });
 };
