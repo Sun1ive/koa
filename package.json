@@ -21,7 +21,7 @@
     "bcrypt": "^1.0.3",
     "jsonwebtoken": "^8.1.0",
     "koa": "^2.4.1",
-    "koa-body": "^2.5.0",
+    "koa-body": "^3.0.0",
     "koa-morgan": "^1.0.1",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
