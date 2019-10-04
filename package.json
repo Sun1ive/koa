@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "rm -rf ./dist && babel -d ./dist ./src -s && node dist/main.js",
-    "dev": "nodemon dev.js"
+    "dev": "nodemon dev.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "author": "Sunlive",
   "license": "ISC",
@@ -31,7 +33,8 @@
     "nodemailer": "^4.4.1",
     "nodemon": "1.12.7",
     "pug": "^2.0.0-rc.4",
-    "woocommerce-api": "^1.4.2"
+    "woocommerce-api": "^1.4.2",
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "eslint": "^4.14.0",
@@ -39,5 +42,6 @@
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1"
-  }
+  },
+  "snyk": true
 }
