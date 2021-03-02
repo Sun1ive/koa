@@ -30,7 +30,7 @@
     "mongoose": "^5.0.0",
     "nodemailer": "^4.4.1",
     "nodemon": "1.12.7",
-    "pug": "^2.0.0-rc.4",
+    "pug": "^3.0.1",
     "woocommerce-api": "^1.4.2"
   },
   "devDependencies": {
